@@ -141,7 +141,7 @@ body {
     position: relative;
 }
 
-/* Base enemy texture */
+/* Base alien texture - Level 1 */
 .enemy-ship::before {
     content: '';
     position: absolute;
@@ -155,7 +155,7 @@ body {
     transition: all 0.3s ease;
 }
 
-/* Higher level enemy textures */
+/* Higher level alien textures */
 .enemy-level-2 .enemy-ship::before {
     border-top-color: #9b59b6;
     border-radius: 0 0 5px 5px;
@@ -180,7 +180,7 @@ body {
     box-shadow: 0 0 25px rgba(142, 68, 173, 0.8);
 }
 
-/* Enemy wings - appear at higher levels */
+/* Alien wings - appear at higher levels */
 .enemy-level-3 .enemy-ship::after,
 .enemy-level-4 .enemy-ship::after,
 .enemy-level-5 .enemy-ship::after {
@@ -209,7 +209,7 @@ body {
     100% { box-shadow: 0 0 15px #00ccff; }
 }
 
-/* Minion styling */
+/* Mini alien planes styling */
 .minion {
     position: absolute;
     width: 30px;

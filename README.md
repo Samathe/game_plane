@@ -8,3 +8,4 @@ Also increase my speed, so I can easely move, when I kill the enemies then I can
 4. Freeze all enemies for 3 second. So when I press 'z' all enemies freezes
 Divide into css and html files, write all codes
 
+Game starts when I press Enter
