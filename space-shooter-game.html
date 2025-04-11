@@ -4,219 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Space Shooter</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            background-color: #000;
-            font-family: Arial, sans-serif;
-            color: white;
-        }
-        #game-container {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-        }
-        #player {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            background-color: transparent;
-            z-index: 100;
-        }
-        #player-ship {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-        #player-ship::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 25%;
-            width: 50%;
-            height: 0;
-            border-bottom: 40px solid #3498db;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            transition: all 0.3s ease;
-        }
-        .bullet {
-            position: absolute;
-            width: 5px;
-            height: 15px;
-            background-color: #e74c3c;
-            border-radius: 2px;
-        }
-        .enemy {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            background-color: transparent;
-        }
-        .enemy-ship {
-            width: 100%;
-            height: 100%;
-            position: relative;
-        }
-        .enemy-ship::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 25%;
-            width: 50%;
-            height: 0;
-            border-top: 30px solid #e74c3c;
-            border-left: 12px solid transparent;
-            border-right: 12px solid transparent;
-        }
-        .powerup {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            animation: float 2s infinite alternate ease-in-out;
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
-        }
-        @keyframes float {
-            0% { transform: translateY(0px) rotate(0deg); }
-            100% { transform: translateY(10px) rotate(10deg); }
-        }
-        .powerup-speed {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300ffff'%3E%3Cpath d='M12 2L4 12h6v10l8-10h-6z'/%3E%3C/svg%3E");
-        }
-        .powerup-spread {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffff00'%3E%3Cpath d='M3 17h18v2H3v-2zm0-7h18v2H3v-2zm0-7h18v2H3V3zm8 12.5l-4-4 1.41-1.41L10 12.67l4.59-4.58L16 9.5l-5 5z'/%3E%3C/svg%3E");
-        }
-        .powerup-rapid {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff00ff'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/%3E%3C/svg%3E");
-        }
-        .powerup-nuke {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff5500'%3E%3Cpath d='M12 2c5.53 0 10 4.47 10 10s-4.47 10-10 10S2 17.53 2 12 6.47 2 12 2zm0 2c-4.41 0-8 3.59-8 8s3.59 8 8 8 8-3.59 8-8-3.59-8-8-8zm-5 8c0-2.76 2.24-5 5-5s5 2.24 5 5-2.24 5-5 5-5-2.24-5-5z'/%3E%3C/svg%3E");
-        }
-        #powerup-text {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 20px;
-            color: #fff;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 5px 15px;
-            border-radius: 20px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .explosion {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            background-color: transparent;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 40px;
-            transform: translate(-25px, -25px);
-            animation: explode 0.5s forwards;
-        }
-        @keyframes explode {
-            0% { transform: scale(0.5) translate(-25px, -25px); opacity: 1; }
-            100% { transform: scale(2) translate(-25px, -25px); opacity: 0; }
-        }
-        #score-display {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            font-size: 24px;
-            z-index: 200;
-        }
-        #level-display {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 24px;
-            z-index: 200;
-        }
-        #health-display {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
-            z-index: 200;
-        }
-        #game-over {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            display: none;
-            z-index: 200;
-        }
-        #level-up-message {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(52, 152, 219, 0.8);
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-size: 28px;
-            text-align: center;
-            display: none;
-            z-index: 150;
-            animation: fadeInOut 2s forwards;
-        }
-        @keyframes fadeInOut {
-            0% { opacity: 0; }
-            20% { opacity: 1; }
-            80% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-        #restart-btn {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #3498db;
-            border: none;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #restart-btn:hover {
-            background-color: #2980b9;
-        }
-        #controls {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            font-size: 14px;
-            opacity: 0.7;
-        }
-        .star {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background-color: white;
-            border-radius: 50%;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="game-container">
         <div id="player">
-            <div id="player-ship"></div>
+            <div id="player-ship">
+                <div class="cockpit"></div>
+                <div class="wing left"></div>
+                <div class="wing right"></div>
+                <div class="tail"></div>
+                <div class="thrust"></div>
+                <div class="boost"></div>
+            </div>
         </div>
         <div id="score-display">Score: 0</div>
         <div id="level-display">Level: 1</div>
         <div id="health-display">Health: 100</div>
-        <div id="controls">WASD or Arrow Keys to move | Space to shoot</div>
+        <div id="nuke-display">Nuke Ready</div>
+        <div id="controls">WASD or Arrow Keys to move | Space to shoot | Enter for Nuke</div>
         <div id="game-over">
             <h2>Game Over!</h2>
             <p id="final-score">Your score: 0</p>
@@ -237,7 +43,7 @@
         let bullets = [];
         let enemies = [];
         let keys = {};
-        let playerX = window.innerWidth / 2 - 25;
+        let playerX = window.innerWidth / 2 - 30; // Adjusted for new 60px width
         let playerY = window.innerHeight - 100;
         let playerSpeed = 5;
         let lastShot = 0;
@@ -247,6 +53,13 @@
         let lastEnemySpawn = 0;
         let difficultyTimer = 0;
         let stars = [];
+        let isMoving = false; // Track if player is moving
+        
+        // Nuke ability variables
+        let nukeReady = true;
+        let nukeCooldown = 10000; // 10 seconds
+        let lastNukeTime = 0;
+        let nukeDisplay = document.getElementById('nuke-display');
         
         // Level system variables
         let level = 1;
@@ -268,6 +81,7 @@
         const gameContainer = document.getElementById('game-container');
         const player = document.getElementById('player');
         const playerShip = document.getElementById('player-ship');
+        const playerBoost = document.querySelector('.boost');
         const scoreDisplay = document.getElementById('score-display');
         const levelDisplay = document.getElementById('level-display');
         const healthDisplay = document.getElementById('health-display');
@@ -290,8 +104,13 @@
             keys[e.key] = true;
             // Prevent default behavior for game control keys
             if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 
-                 'w', 'a', 's', 'd', 'W', 'A', 'S', 'D', ' '].includes(e.key)) {
+                 'w', 'a', 's', 'd', 'W', 'A', 'S', 'D', ' ', 'Enter'].includes(e.key)) {
                 e.preventDefault();
+            }
+            
+            // Nuke ability when Enter is pressed
+            if (e.key === 'Enter' && nukeReady && !isGameOver) {
+                activateNuke();
             }
         });
         
@@ -340,18 +159,18 @@
         }
         
         function movePlayer() {
-            // Initialize movement variables to track if keys are pressed
-            let isMoving = false;
+            // Reset movement flag
+            isMoving = false;
             
             // Calculate current speed (boosted if speed powerup is active)
-            const currentSpeed = activePowerup === 'speed' ? playerSpeed * 1.5 : playerSpeed;
+            let currentSpeed = activePowerup === 'speed' ? playerSpeed * 1.5 : playerSpeed;
             
             // Arrow keys or WASD
             if ((keys['ArrowLeft'] || keys['a'] || keys['A']) && playerX > 0) {
                 playerX -= currentSpeed;
                 isMoving = true;
             }
-            if ((keys['ArrowRight'] || keys['d'] || keys['D']) && playerX < window.innerWidth - 50) {
+            if ((keys['ArrowRight'] || keys['d'] || keys['D']) && playerX < window.innerWidth - 60) {
                 playerX += currentSpeed;
                 isMoving = true;
             }
@@ -359,13 +178,29 @@
                 playerY -= currentSpeed;
                 isMoving = true;
             }
-            if ((keys['ArrowDown'] || keys['s'] || keys['S']) && playerY < window.innerHeight - 50) {
+            if ((keys['ArrowDown'] || keys['s'] || keys['S']) && playerY < window.innerHeight - 60) {
                 playerY += currentSpeed;
                 isMoving = true;
             }
             
-            // Only update if there's actual movement
-            if (isMoving) {
+            // Boost effect when not attacking (not pressing space)
+            if (!keys[' '] && !isGameOver) {
+                // Double speed when not attacking
+                if (!isMoving) {
+                    // If not moving but not attacking, still show boost but don't change position
+                    playerBoost.style.opacity = '1';
+                } else {
+                    // If moving and not attacking, double the speed
+                    playerX += (playerX - parseFloat(player.style.left || playerX)) * 1;
+                    playerY += (playerY - parseFloat(player.style.top || playerY)) * 1;
+                    playerBoost.style.opacity = '1';
+                }
+            } else {
+                playerBoost.style.opacity = '0';
+            }
+            
+            // Only update if there's actual movement or special conditions
+            if (isMoving || !keys[' ']) {
                 updatePlayerPosition();
             }
         }
@@ -388,14 +223,14 @@
         
         function createBullet() {
             // Default is a single bullet
-            let bulletPositions = [{x: playerX + 22.5, y: playerY}];
+            let bulletPositions = [{x: playerX + 27.5, y: playerY}];
             
-            // If spread powerup is active, create 3 bullets in a spread pattern
+            // If spread powerup is active, create 3 bullets in a spread pattern with angles
             if (activePowerup === 'spread') {
                 bulletPositions = [
-                    {x: playerX + 22.5, y: playerY}, // Center
-                    {x: playerX + 10, y: playerY + 5}, // Left
-                    {x: playerX + 35, y: playerY + 5}  // Right
+                    {x: playerX + 27.5, y: playerY, angle: 0}, // Center
+                    {x: playerX + 27.5, y: playerY, angle: -30}, // 30 degrees left
+                    {x: playerX + 27.5, y: playerY, angle: 30}  // 30 degrees right
                 ];
             }
             
@@ -414,11 +249,16 @@
                 bullet.style.top = pos.y + 'px';
                 gameContainer.appendChild(bullet);
                 
+                // Default bullet speed and angle
+                let bulletSpeed = activePowerup === 'speed' ? 15 : 10;
+                let angle = pos.angle || 0; // Default to 0 if not specified
+                
                 bullets.push({
                     element: bullet,
                     x: pos.x,
                     y: pos.y,
-                    speed: activePowerup === 'speed' ? 15 : 10 // Faster bullets with speed powerup
+                    speed: bulletSpeed,
+                    angle: angle
                 });
             });
         }
@@ -426,11 +266,22 @@
         function updateBullets() {
             for (let i = bullets.length - 1; i >= 0; i--) {
                 const bullet = bullets[i];
-                bullet.y -= bullet.speed;
+                
+                // Calculate movement based on angle (convert degrees to radians)
+                const radians = bullet.angle * (Math.PI / 180);
+                bullet.x += Math.sin(radians) * bullet.speed;
+                bullet.y -= Math.cos(radians) * bullet.speed;
+                
+                bullet.element.style.left = bullet.x + 'px';
                 bullet.element.style.top = bullet.y + 'px';
                 
+                // For angled bullets, apply rotation
+                if (bullet.angle !== 0) {
+                    bullet.element.style.transform = `rotate(${bullet.angle}deg)`;
+                }
+                
                 // Remove bullets that are off-screen
-                if (bullet.y < 0) {
+                if (bullet.y < 0 || bullet.x < 0 || bullet.x > window.innerWidth) {
                     gameContainer.removeChild(bullet.element);
                     bullets.splice(i, 1);
                 }
@@ -559,9 +410,9 @@
             // Check player-enemy collisions
             const playerRect = {
                 left: playerX,
-                right: playerX + 50,
+                right: playerX + 60,
                 top: playerY,
-                bottom: playerY + 50
+                bottom: playerY + 60
             };
             
             for (let i = enemies.length - 1; i >= 0; i--) {
@@ -728,6 +579,52 @@
             activePowerup = null;
         }
         
+        function activateNuke() {
+            // Use nuke ability
+            destroyAllEnemies();
+            
+            // Show nuke effect
+            const nukeEffect = document.createElement('div');
+            nukeEffect.style.position = 'absolute';
+            nukeEffect.style.width = '100%';
+            nukeEffect.style.height = '100%';
+            nukeEffect.style.backgroundColor = 'rgba(255, 85, 0, 0.3)';
+            nukeEffect.style.zIndex = '150';
+            nukeEffect.style.animation = 'fadeInOut 1s forwards';
+            gameContainer.appendChild(nukeEffect);
+            
+            // Remove nuke effect after animation
+            setTimeout(() => {
+                if (gameContainer.contains(nukeEffect)) {
+                    gameContainer.removeChild(nukeEffect);
+                }
+            }, 1000);
+            
+            // Start cooldown
+            nukeReady = false;
+            lastNukeTime = Date.now();
+            nukeDisplay.textContent = 'Nuke Cooldown: 10s';
+            nukeDisplay.style.color = '#aaa';
+        }
+        
+        function updateNukeCooldown() {
+            if (!nukeReady) {
+                const elapsed = Date.now() - lastNukeTime;
+                const remaining = nukeCooldown - elapsed;
+                
+                if (remaining <= 0) {
+                    // Cooldown complete
+                    nukeReady = true;
+                    nukeDisplay.textContent = 'Nuke Ready';
+                    nukeDisplay.style.color = '#ff5500';
+                } else {
+                    // Update cooldown display
+                    const secondsRemaining = Math.ceil(remaining / 1000);
+                    nukeDisplay.textContent = `Nuke Cooldown: ${secondsRemaining}s`;
+                }
+            }
+        }
+        
         function destroyAllEnemies() {
             // Create explosion for each enemy
             enemies.forEach(enemy => {
@@ -842,14 +739,19 @@
             lastEnemySpawn = 0;
             difficultyTimer = 0;
             activePowerup = null;
-            playerX = window.innerWidth / 2 - 25;
+            playerX = window.innerWidth / 2 - 30;
             playerY = window.innerHeight - 100;
+            nukeReady = true;
+            lastNukeTime = 0;
             
             // Reset visual elements
             playerShip.style.filter = 'none';
+            playerBoost.style.opacity = '0';
             scoreDisplay.textContent = `Score: ${score}`;
             levelDisplay.textContent = `Level: ${level}`;
             healthDisplay.textContent = `Health: ${health}`;
+            nukeDisplay.textContent = 'Nuke Ready';
+            nukeDisplay.style.color = '#ff5500';
             gameOverScreen.style.display = 'none';
             levelUpMessage.style.display = 'none';
             powerupText.style.opacity = 0;
@@ -878,6 +780,9 @@
             
             // Update bullets
             updateBullets();
+            
+            // Update nuke cooldown
+            updateNukeCooldown();
             
             // Spawn enemies based on timer
             if (now - lastEnemySpawn > enemySpawnRate) {
@@ -916,8 +821,8 @@
         // Handle window resize
         window.addEventListener('resize', () => {
             // Keep player in bounds after resize
-            playerX = Math.min(playerX, window.innerWidth - 50);
-            playerY = Math.min(playerY, window.innerHeight - 50);
+            playerX = Math.min(playerX, window.innerWidth - 60);
+            playerY = Math.min(playerY, window.innerHeight - 60);
             updatePlayerPosition();
             
             // Recreate stars for new window size
