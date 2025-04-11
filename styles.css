@@ -5,11 +5,13 @@ body {
     font-family: Arial, sans-serif;
     color: white;
 }
+
 #game-container {
     position: relative;
     width: 100%;
     height: 100vh;
 }
+
 #player {
     position: absolute;
     width: 60px;
@@ -17,13 +19,15 @@ body {
     background-color: transparent;
     z-index: 100;
 }
+
 #player-ship {
     width: 100%;
     height: 100%;
     position: relative;
     transition: all 0.3s ease;
 }
-/* New realistic aircraft design */
+
+/* Realistic aircraft design */
 #player-ship::before {
     content: '';
     position: absolute;
@@ -35,6 +39,7 @@ body {
     border-radius: 50% 50% 0 0 / 60% 60% 0 0;
     box-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
 }
+
 #player-ship::after {
     content: '';
     position: absolute;
@@ -45,6 +50,7 @@ body {
     background-color: #2980b9;
     clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%);
 }
+
 .wing {
     position: absolute;
     background-color: #3498db;
@@ -52,14 +58,17 @@ body {
     width: 25px;
     top: 25px;
 }
+
 .wing.left {
     left: -10px;
     transform: skew(0, -15deg);
 }
+
 .wing.right {
     right: -10px;
     transform: skew(0, 15deg);
 }
+
 .tail {
     position: absolute;
     width: 10px;
@@ -68,6 +77,7 @@ body {
     bottom: 0;
     left: 45%;
 }
+
 .cockpit {
     position: absolute;
     width: 20px;
@@ -78,6 +88,7 @@ body {
     left: 33%;
     box-shadow: 0 0 5px rgba(133, 193, 233, 0.8);
 }
+
 .thrust {
     position: absolute;
     bottom: -10px;
@@ -89,10 +100,12 @@ body {
     filter: blur(2px);
     animation: thrust 0.1s infinite alternate;
 }
+
 @keyframes thrust {
     0% { height: 10px; opacity: 0.6; }
     100% { height: 15px; opacity: 0.9; }
 }
+
 .boost {
     position: absolute;
     bottom: -20px;
@@ -106,6 +119,7 @@ body {
     opacity: 0;
     transition: opacity 0.3s ease;
 }
+
 .bullet {
     position: absolute;
     width: 5px;
@@ -113,17 +127,21 @@ body {
     background-color: #e74c3c;
     border-radius: 2px;
 }
+
 .enemy {
     position: absolute;
     width: 40px;
     height: 40px;
     background-color: transparent;
 }
+
 .enemy-ship {
     width: 100%;
     height: 100%;
     position: relative;
 }
+
+/* Base enemy texture */
 .enemy-ship::before {
     content: '';
     position: absolute;
@@ -134,7 +152,136 @@ body {
     border-top: 30px solid #e74c3c;
     border-left: 12px solid transparent;
     border-right: 12px solid transparent;
+    transition: all 0.3s ease;
 }
+
+/* Higher level enemy textures */
+.enemy-level-2 .enemy-ship::before {
+    border-top-color: #9b59b6;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 0 10px rgba(155, 89, 182, 0.5);
+}
+
+.enemy-level-3 .enemy-ship::before {
+    border-top-color: #f39c12;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 0 15px rgba(243, 156, 18, 0.6);
+}
+
+.enemy-level-4 .enemy-ship::before {
+    border-top-color: #16a085;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 0 20px rgba(22, 160, 133, 0.7);
+}
+
+.enemy-level-5 .enemy-ship::before {
+    border-top-color: #8e44ad;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 0 25px rgba(142, 68, 173, 0.8);
+}
+
+/* Enemy wings - appear at higher levels */
+.enemy-level-3 .enemy-ship::after,
+.enemy-level-4 .enemy-ship::after,
+.enemy-level-5 .enemy-ship::after {
+    content: '';
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+    clip-path: polygon(0 50%, 20% 0, 80% 0, 100% 50%);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+/* Frozen enemy effect */
+.enemy-frozen {
+    filter: brightness(0.7) sepia(1) hue-rotate(180deg) saturate(5);
+}
+
+.enemy-frozen .enemy-ship::before {
+    animation: ice-pulse 2s infinite alternate;
+}
+
+@keyframes ice-pulse {
+    0% { box-shadow: 0 0 5px #00ccff; }
+    100% { box-shadow: 0 0 15px #00ccff; }
+}
+
+/* Minion styling */
+.minion {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    z-index: 90;
+}
+
+.minion-ship {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.minion-ship::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 25%;
+    width: 50%;
+    height: 15px;
+    background-color: #27ae60;
+    border-radius: 50% 50% 0 0 / 60% 60% 0 0;
+    box-shadow: 0 0 8px rgba(39, 174, 96, 0.7);
+}
+
+.minion-ship::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 29%;
+    width: 42%;
+    height: 10px;
+    background-color: #2ecc71;
+    clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%);
+}
+
+.minion-bullet {
+    position: absolute;
+    width: 3px;
+    height: 10px;
+    background-color: #2ecc71;
+    border-radius: 2px;
+}
+
+.minion .wing {
+    position: absolute;
+    background-color: #2ecc71;
+    height: 5px;
+    width: 12px;
+    top: 12px;
+}
+
+.minion .wing.left {
+    left: -5px;
+    transform: skew(0, -15deg);
+}
+
+.minion .wing.right {
+    right: -5px;
+    transform: skew(0, 15deg);
+}
+
+.minion .thrust {
+    position: absolute;
+    bottom: -5px;
+    left: 45%;
+    width: 5px;
+    height: 5px;
+    background-color: rgba(255, 165, 0, 0.8);
+}
+
 .powerup {
     position: absolute;
     width: 30px;
@@ -145,22 +292,28 @@ body {
     animation: float 2s infinite alternate ease-in-out;
     filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
 }
+
 @keyframes float {
     0% { transform: translateY(0px) rotate(0deg); }
     100% { transform: translateY(10px) rotate(10deg); }
 }
+
 .powerup-speed {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300ffff'%3E%3Cpath d='M12 2L4 12h6v10l8-10h-6z'/%3E%3C/svg%3E");
 }
+
 .powerup-spread {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffff00'%3E%3Cpath d='M3 17h18v2H3v-2zm0-7h18v2H3v-2zm0-7h18v2H3V3zm8 12.5l-4-4 1.41-1.41L10 12.67l4.59-4.58L16 9.5l-5 5z'/%3E%3C/svg%3E");
 }
+
 .powerup-rapid {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff00ff'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/%3E%3C/svg%3E");
 }
+
 .powerup-nuke {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff5500'%3E%3Cpath d='M12 2c5.53 0 10 4.47 10 10s-4.47 10-10 10S2 17.53 2 12 6.47 2 12 2zm0 2c-4.41 0-8 3.59-8 8s3.59 8 8 8 8-3.59 8-8-3.59-8-8-8zm-5 8c0-2.76 2.24-5 5-5s5 2.24 5 5-2.24 5-5 5-5-2.24-5-5z'/%3E%3C/svg%3E");
 }
+
 #powerup-text {
     position: absolute;
     bottom: 40px;
@@ -174,6 +327,7 @@ body {
     opacity: 0;
     transition: opacity 0.3s;
 }
+
 .explosion {
     position: absolute;
     width: 50px;
@@ -186,10 +340,89 @@ body {
     transform: translate(-25px, -25px);
     animation: explode 0.5s forwards;
 }
+
 @keyframes explode {
     0% { transform: scale(0.5) translate(-25px, -25px); opacity: 1; }
     100% { transform: scale(2) translate(-25px, -25px); opacity: 0; }
 }
+
+/* Skills panel */
+#skills-panel {
+    position: fixed;
+    top: 100px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 200;
+}
+
+.skill {
+    width: 50px;
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 2px solid #555;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.skill:hover {
+    border-color: #3498db;
+    transform: scale(1.05);
+}
+
+.skill-icon {
+    width: 30px;
+    height: 30px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.speed-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300ffff'%3E%3Cpath d='M10 8.64L15.27 12 10 15.36V8.64M8 5v14l11-7L8 5z'/%3E%3C/svg%3E");
+}
+
+.attack-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff00ff'%3E%3Cpath d='M7,2V4H8V18A2,2 0 0,0 10,20H16A2,2 0 0,0 18,18V4H19V2H7M16,16H10V11H16V16Z'/%3E%3C/svg%3E");
+}
+
+.minion-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232ecc71'%3E%3Cpath d='M8,8L13,5L8,2V8M13,19L8,16V22L13,19M4,9.5L7,10.5L7,13.5L4,12.5L4,9.5M7,10.5L11,9.5V12.5L7,13.5V10.5M11,9.5L15,10.5V13.5L11,12.5V9.5M15,10.5L18,9.5V12.5L15,13.5V10.5M4,14.5L7,15.5L7,18.5L4,17.5L4,14.5M7,15.5L11,14.5V17.5L7,18.5V15.5M11,14.5L15,15.5V18.5L11,17.5V14.5M15,15.5L18,14.5V17.5L15,18.5V15.5M4,4.5L7,5.5L7,8.5L4,7.5L4,4.5M7,5.5L11,4.5V7.5L7,8.5V5.5M11,4.5L15,5.5V8.5L11,7.5V4.5M15,5.5L18,4.5V7.5L15,8.5V5.5'/%3E%3C/svg%3E");
+}
+
+.freeze-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300ccff'%3E%3Cpath d='M10,4H14V13L17.5,9.5L19.92,11.92L12,19.84L4.08,11.92L6.5,9.5L10,13V4Z'/%3E%3C/svg%3E");
+}
+
+.skill-level {
+    font-size: 12px;
+    color: #ddd;
+}
+
+.skill-level.ready {
+    color: #00ccff;
+}
+
+.freeze-cooldown {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: white;
+}
+
 #score-display {
     position: absolute;
     top: 10px;
@@ -197,6 +430,7 @@ body {
     font-size: 24px;
     z-index: 200;
 }
+
 #level-display {
     position: absolute;
     top: 10px;
@@ -205,6 +439,7 @@ body {
     font-size: 24px;
     z-index: 200;
 }
+
 #health-display {
     position: absolute;
     top: 10px;
@@ -212,6 +447,7 @@ body {
     font-size: 24px;
     z-index: 200;
 }
+
 #nuke-display {
     position: absolute;
     top: 50px;
@@ -220,6 +456,16 @@ body {
     z-index: 200;
     color: #ff5500;
 }
+
+#skill-points {
+    position: absolute;
+    top: 50px;
+    left: 10px;
+    font-size: 18px;
+    z-index: 200;
+    color: #f1c40f;
+}
+
 #game-over {
     position: absolute;
     top: 50%;
@@ -230,8 +476,9 @@ body {
     border-radius: 10px;
     text-align: center;
     display: none;
-    z-index: 200;
+    z-index: 300;
 }
+
 #level-up-message {
     position: absolute;
     top: 50%;
@@ -243,15 +490,23 @@ body {
     font-size: 28px;
     text-align: center;
     display: none;
-    z-index: 150;
+    z-index: 250;
     animation: fadeInOut 2s forwards;
 }
+
+#level-up-message p {
+    font-size: 18px;
+    margin: 5px 0 0 0;
+    color: #f1c40f;
+}
+
 @keyframes fadeInOut {
     0% { opacity: 0; }
     20% { opacity: 1; }
     80% { opacity: 1; }
     100% { opacity: 0; }
 }
+
 #restart-btn {
     margin-top: 20px;
     padding: 10px 20px;
@@ -261,9 +516,11 @@ body {
     border-radius: 5px;
     cursor: pointer;
 }
+
 #restart-btn:hover {
     background-color: #2980b9;
 }
+
 #controls {
     position: absolute;
     bottom: 10px;
@@ -271,10 +528,30 @@ body {
     font-size: 14px;
     opacity: 0.7;
 }
+
 .star {
     position: absolute;
     width: 2px;
     height: 2px;
     background-color: white;
     border-radius: 50%;
+}
+
+/* Ice crystal effect for freeze ability */
+.ice-crystal {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300ccff'%3E%3Cpath d='M12,2L16,6H13V11H16L12,15L8,11H11V6H8L12,2M20,12L22,16H19V21H16L12,17H15V12H20M12,17L8,21L4,16H7V12H4L6,9L3,7L8,6L12,10L16,6L17,7L20,9L12,17Z'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0;
+    animation: ice-appear 1s ease-out forwards;
+}
+
+@keyframes ice-appear {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.5); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 0; }
 }
